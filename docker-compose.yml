@@ -1,0 +1,116 @@
+version: "3.9"
+
+# 网络配置
+networks:
+  # 自定义网络名称
+  grpc_net:
+    driver: bridge
+
+# 服务容器配置
+services:
+
+  # 服务名称
+  mysql:
+    # 容器镜像
+    image: mysql:latest
+    #容器名称
+    container_name: mysql
+    # 容器服务端口
+    ports:
+      - "33061:3306"
+    # 命令
+    command:
+      # 将mysql8.0默认密码策略修改为原先策略(mysql8.0对其默认策略做了更改，会导致密码无法匹配)
+      ["--default_authentication_plugin=mysql_native_password","--character-set-server=utf8mb4","--collation-server=utf8mb4_general_ci"]
+    # 环境变量
+    environment:
+      # 时区
+      TZ: "Asia/Shanghai"
+      # root密码
+      MYSQL_ROOT_PASSWORD: "020491"
+      # 在镜像启动时创建数据库
+      MYSQL_DATABASE: "grpc_todolist"
+      # mysql用户名称 该用户有上述数据库的全部权限
+      MYSQL_USER: "grpc"
+      # mysql用户密码
+      MYSQL_PASSWORD: "020491"
+    # 数据卷
+    volumes:
+      # 数据挂载 将容器中的mysql数据挂载在宿主机 ./data/mysql 目录下 以免容器损坏导致数据丢失
+      - ./data/mysql/data:/var/lib/mysql
+      # 日志挂载
+      - ./data/mysql/logs:/logs
+      # 配置挂载
+      - ./data/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - grpc_net
+    # 容器始终重新启动
+    restart: always
+
+
+  # etcd容器
+  etcd:
+    image: bitnami/etcd:latest
+    container_name: etcd
+    ports:
+      - "2379:2379"
+    environment:
+      - TZ=Asia/Shanghai
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    networks:
+      - grpc_net
+    restart: always
+
+
+  # gateway容器
+  gateway:
+    build:
+      context: ./api-gateway
+    container_name: gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - grpc_net
+    depends_on:
+      - mysql
+      - etcd
+    restart: always
+
+
+  # user容器
+  user:
+    build:
+      context: ./user
+    container_name: user
+    ports:
+      - "10001:10001"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - grpc_net
+    depends_on:
+      - mysql
+      - etcd
+      - gateway
+    restart: always
+
+
+  # task容器
+  task:
+    build:
+      context: ./task
+    container_name: task
+    ports:
+      - "10002:10002"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - grpc_net
+    depends_on:
+      - mysql
+      - etcd
+      - gateway
+    restart: always

@@ -1,0 +1,21 @@
+server:
+  domain: api-gateway
+  port: :4000
+  jwtSecret: grpc-todolist
+  version: 1.0
+
+user:
+  # grpcAddress: user:10001
+  grpcAddress: 127.0.0.1:10001
+
+task:
+  # grpcAddress: task:10002
+  grpcAddress: 127.0.0.1:10002
+
+etcd:
+  # address: etcd:2379
+  address: 127.0.0.1:2379
+
+redis:
+  address: 127.0.0.1:6379
+  password:

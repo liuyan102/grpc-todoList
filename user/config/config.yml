@@ -1,0 +1,26 @@
+server:
+  domain: user
+  version: 1.0
+  jwtSecret: FanOne
+  # 部署至docker容器后 grpcAddress: user:10001
+  grpcAddress: 127.0.0.1:10001
+
+datasource:
+  driverName: mysql
+  # 部署至docker容器后修改为 host: mysql(容器名)
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: "020491"
+  database: grpc_todolist
+  charset: utf8
+  loc: Asia/Shanghai
+
+etcd:
+  # 部署至docker容器后修改为 address: etcd:2379
+  address: 127.0.0.1:2379
+
+redis:
+  address: 127.0.0.1:6379
+  password:
+

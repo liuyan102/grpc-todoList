@@ -1,0 +1,26 @@
+server:
+  domain: task
+  version: 1.0
+  jwtSecret: FanOne
+  #   grpcAddress: task:10002
+  grpcAddress: 127.0.0.1:10002
+
+datasource:
+  driverName: mysql
+  # host: mysql
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: "020491"
+  database: grpc_todolist
+  charset: utf8
+  loc: Asia/Shanghai
+
+etcd:
+  # address: etcd:2379
+  address: 127.0.0.1:2379
+
+redis:
+  address: 127.0.0.1:6379
+  password:
+
