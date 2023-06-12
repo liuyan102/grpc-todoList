@@ -1,5 +1,5 @@
 # grpc-todoList
-采用gin、gorm、grpc、etcd、mysql、docker实现备忘录微服务demo
+采用gin、gorm、grpc、protoBuf、etcd、mysql、docker实现备忘录微服务demo
 
 
 | 文件                              | 说明              |
