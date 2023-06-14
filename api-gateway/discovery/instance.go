@@ -9,11 +9,12 @@ import (
 	"google.golang.org/grpc/resolver"
 )
 
+// Server 服务实例
 type Server struct {
 	Name    string `json:"name"`
-	Addr    string `json:"addr"`
-	Version string `json:"version"`
-	Weight  int64  `json:"weight"`
+	Addr    string `json:"addr"`    // 服务地址
+	Version string `json:"version"` // 服务版本
+	Weight  int64  `json:"weight"`  // 服务权重
 }
 
 func BuildPrefix(server Server) string {
